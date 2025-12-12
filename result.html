@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prediction Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>
+    async function sendMessage() {
+      const msg = document.getElementById("userInput").value;
+      const deficiency = "{{ deficiency }}";
+      const chatBox = document.getElementById("chatBox");
+
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: message=${msg}&deficiency=${deficiency}
+      });
+      const data = await res.json();
+      chatBox.innerHTML += <p><b>You:</b> ${msg}</p>;
+      chatBox.innerHTML += <p><b>Bot:</b> ${data.response}</p>;
+      document.getElementById("userInput").value = "";
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h2>Prediction Result</h2>
+    <img src="{{ image_path }}" alt="Uploaded Image" width="250">
+    <h3>Deficiency: {{ deficiency }}</h3>
+    <p>Confidence: {{ confidence }}%</p>
+
+    <h3>Cause:</h3>
+    <p>{{ cause }}</p>
+    <h3>Symptoms:</h3>
+    <p>{{ symptoms }}</p>
+    <h3>Diet Recommendations:</h3>
+    <p>{{ diet }}</p>
+
+    <hr>
+    <h3>💬 Chat with Vitamin Bot</h3>
+    <div id="chatBox" class="chat-box"></div>
+    <input type="text" id="userInput" placeholder="Ask about {{ deficiency }}...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</body>
+</html>
